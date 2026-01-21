@@ -21,10 +21,15 @@ namespace NodeCanvas.Tasks.Actions {
 		//Call EndAction() to mark the action as finished, either in success or failure.
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
+            //get the value from the blackboard
             Blackboard targetBlackboard = target.value.GetComponent<Blackboard>();
             float TimeRemaining = targetBlackboard.GetVariableValue<float>("TimeRemaining");
-			TimeRemaining += AmountToChange;
-			targetBlackboard.SetVariableValue("TimeRemaining", TimeRemaining);
+
+            //increase the value
+            TimeRemaining += AmountToChange;
+
+            //assign the value back to the blackboard
+            targetBlackboard.SetVariableValue("TimeRemaining", TimeRemaining);
             EndAction(true);
 		}
 
