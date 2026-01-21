@@ -5,44 +5,33 @@ using UnityEngine;
 
 namespace NodeCanvas.Tasks.Actions {
 
-	public class DecreaseOverTimeAT : ActionTask {
+	public class ChangeValueAT : ActionTask {
 
-		public BBParameter<float> TimeRemaining;
+        public BBParameter<GameObject> target;
 
-
-		public float speed;
+		public float AmountToChange;
 
         //Use for initialization. This is called only once in the lifetime of the task.
         //Return null if init was successfull. Return an error string otherwise
         protected override string OnInit() {
-			
-            return null;
+			return null;
 		}
 
 		//This is called once each time the task is enabled.
 		//Call EndAction() to mark the action as finished, either in success or failure.
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
-            TimeRemaining.value = 3f;
-        }
+            Blackboard targetBlackboard = target.value.GetComponent<Blackboard>();
+            float TimeRemaining = targetBlackboard.GetVariableValue<float>("TimeRemaining");
+			TimeRemaining += AmountToChange;
+			targetBlackboard.SetVariableValue("TimeRemaining", TimeRemaining);
+            EndAction(true);
+		}
 
 		//Called once per frame while the action is active.
 		protected override void OnUpdate() {
-			//start timer
-			TimeRemaining.value -= Time.deltaTime;
-			Debug.Log("Time Remaining: " + TimeRemaining.value);
-            //if the timer is finished, stop the object and end the action
-            if (TimeRemaining.value <= 0f)
-			{
-				TimeRemaining.value = 0f;
-                EndAction(true);
-            }
-            //while timer is running, move the object to the right
-            else
-            {
-				agent.transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
-            }
-        }
+			
+		}
 
 		//Called when the task is disabled.
 		protected override void OnStop() {
